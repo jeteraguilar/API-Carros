@@ -50,8 +50,8 @@ public class CarroService {
 
             return CarroDTO.create(db);
         } else {
-            //return null;
-            throw new RuntimeException("Não foi possível atualizar o registro");
+            return null;
+            //throw new RuntimeException("Não foi possível atualizar o registro");
         }
     }
 

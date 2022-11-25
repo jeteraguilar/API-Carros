@@ -59,6 +59,9 @@ public class CarrosController {
 
     @PutMapping("/{id}")
     public ResponseEntity put(@PathVariable("id") Long id, @RequestBody Carro carro) {
+
+        carro.setId(id);
+        
         CarroDTO c = service.update(carro, id);
 
         return c != null ?
