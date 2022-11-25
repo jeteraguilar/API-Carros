@@ -55,11 +55,13 @@ public class CarroService {
         }
     }
 
-    public void delete(Long id) {
+    public boolean delete(Long id) {
 
         if(getCarroById(id).isPresent()) {
             repository.deleteById(id);
+            return true;
         }
+        return false;
     }
 
     public List<Carro> getCarrosFake() {

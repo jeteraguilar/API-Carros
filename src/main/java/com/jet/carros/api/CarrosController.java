@@ -61,19 +61,21 @@ public class CarrosController {
     public ResponseEntity put(@PathVariable("id") Long id, @RequestBody Carro carro) {
 
         carro.setId(id);
-        
+
         CarroDTO c = service.update(carro, id);
 
         return c != null ?
-                ResponseEntity.ok(c) :
+                ResponseEntity.ok().build() :
                 ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        service.delete(id);
+    public ResponseEntity delete(@PathVariable("id") Long id) {
+        boolean ok = service.delete(id);
 
-        return "Carro deletado com sucesso";
+        return ok ?
+                ResponseEntity.ok().build() :
+                ResponseEntity.notFound().build();
     }
 }
 
