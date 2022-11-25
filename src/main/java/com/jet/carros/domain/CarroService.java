@@ -1,5 +1,6 @@
 package com.jet.carros.domain;
 
+import com.jet.carros.domain.dto.CarroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -15,16 +16,16 @@ public class CarroService {
     @Autowired
     private CarroRepository repository;
 
-    public Iterable<Carro> getCarros() {
-        return repository.findAll();
+    public List<CarroDTO> getCarros() {
+        return repository.findAll().stream().map(CarroDTO::create).collect(Collectors.toList());
     }
 
-    public Optional<Carro> getCarroById(Long id) {
-        return repository.findById(id);
+    public Optional<CarroDTO> getCarroById(Long id) {
+        return repository.findById(id).map(CarroDTO::create);
     }
 
-    public List<Carro> getCarrosByTipo(String tipo) {
-        return repository.findByTipo(tipo);
+    public List<CarroDTO> getCarrosByTipo(String tipo) {
+        return repository.findByTipo(tipo).stream().map(CarroDTO::create).collect(Collectors.toList());
     }
 
     public Carro insert(Carro carro) {
@@ -32,23 +33,24 @@ public class CarroService {
         return repository.save(carro);
     }
 
-    public Carro update(Carro carro, Long id) {
-        Assert.isNull(carro.getId(), "Não foi possível atualizar o registro");
+    public CarroDTO update(Carro carro, Long id) {
+        Assert.notNull(id,"Não foi possível atualizar o registro");
 
-        //Busca o carro do banco de dados
-        Optional<Carro> optional = getCarroById(id);
+        // Busca o carro no banco de dados
+        Optional<Carro> optional = repository.findById(id);
         if(optional.isPresent()) {
             Carro db = optional.get();
-            //Copiar as propriedades
+            // Copiar as propriedades
             db.setNome(carro.getNome());
             db.setTipo(carro.getTipo());
             System.out.println("Carro id " + db.getId());
 
-            //Atualiza carro
+            // Atualiza o carro
             repository.save(db);
 
-            return db;
+            return CarroDTO.create(db);
         } else {
+            //return null;
             throw new RuntimeException("Não foi possível atualizar o registro");
         }
     }

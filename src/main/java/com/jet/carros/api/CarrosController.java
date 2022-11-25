@@ -2,6 +2,7 @@ package com.jet.carros.api;
 
 import com.jet.carros.domain.Carro;
 import com.jet.carros.domain.CarroService;
+import com.jet.carros.domain.dto.CarroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,13 @@ public class CarrosController {
     private CarroService service;
 
     @GetMapping()
-    public ResponseEntity<Iterable<Carro>> get() {
+    public ResponseEntity get() {
         return ResponseEntity.ok(service.getCarros());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity get(@PathVariable("id") Long id) {
-        Optional<Carro> carro = service.getCarroById(id);
+        Optional<CarroDTO> carro = service.getCarroById(id);
 
         return carro.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -30,7 +31,7 @@ public class CarrosController {
 
     @GetMapping("/tipo/{tipo}")
     public ResponseEntity getCarrosByTipo(@PathVariable("tipo") String tipo) {
-        List<Carro> carros = service.getCarrosByTipo(tipo);
+        List<CarroDTO> carros = service.getCarrosByTipo(tipo);
 
         return carros.isEmpty() ?
                 ResponseEntity.noContent().build() :
@@ -45,10 +46,12 @@ public class CarrosController {
     }
 
     @PutMapping("/{id}")
-    public String put(@PathVariable("id") Long id, @RequestBody Carro carro) {
-        Carro c = service.update(carro, id);
+    public ResponseEntity put(@PathVariable("id") Long id, @RequestBody Carro carro) {
+        CarroDTO c = service.update(carro, id);
 
-        return "Carro atualizado com sucesso: " + c.getId();
+        return c != null ?
+                ResponseEntity.ok(c) :
+                ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
