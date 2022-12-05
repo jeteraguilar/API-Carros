@@ -78,7 +78,8 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Swagger -->
+
+		<!-- Documentação Swagger , link   http://localhost:8080/swagger-ui.html#/-->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
